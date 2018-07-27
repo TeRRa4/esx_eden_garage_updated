@@ -4,13 +4,11 @@ RegisterServerEvent('eden_garage:pay')
 RegisterServerEvent('eden_garage:payhealth')
 RegisterServerEvent('eden_garage:logging')
 
-
 ESX                = nil
 
 TriggerEvent('esx:getSharedObject', function(obj) ESX = obj end)
 
-
---Recupere les véhicules
+-- Vehicle fetch
 ESX.RegisterServerCallback('eden_garage:getVehicles', function(source, cb)
 	local _source = source
 	local xPlayer = ESX.GetPlayerFromId(_source)
@@ -24,9 +22,9 @@ ESX.RegisterServerCallback('eden_garage:getVehicles', function(source, cb)
 		cb(vehicules)
 	end)
 end)
--- Fin --Recupere les véhicules
+-- End vehicle fetch
 
---Stock les véhicules
+-- Store & update vehicle properties
 ESX.RegisterServerCallback('eden_garage:stockv',function(source,cb, vehicleProps)
 	local isFound = false
 	local _source = source
@@ -45,32 +43,26 @@ ESX.RegisterServerCallback('eden_garage:stockv',function(source,cb, vehicleProps
 		end
 	cb(isFound)
 end)
+-- End vehicle store
 
-
---Fin stock les vehicules
-
---Change le state du véhicule
-
+-- Change state of vehicle
 AddEventHandler('eden_garage:modifystate', function(plate, state)
 	local _source = source
 	local xPlayer = ESX.GetPlayerFromId(_source)
 	local vehicules = getPlayerVehicles(xPlayer.getIdentifier())
 	local state = state
-
+	print('UPDATING STATE')
+	print(plate)
 	for _,v in pairs(vehicules) do
 		MySQL.Sync.execute("UPDATE owned_vehicles SET state =@state WHERE plate=@plate",{['@state'] = state , ['@plate'] = plate})
 		break		
 	end
 end)	
+-- End state update
 
+-- Function to recover plates deprecated and removed.
 
-
---Fin change le state du véhicule
-
---Fonction qui récupere les plates
-
--- Fin Fonction qui récupere les plates
-
+-- Get list of vehicles already out
 ESX.RegisterServerCallback('eden_garage:getOutVehicles',function(source, cb)	
 	local _source = source
 	local xPlayer = ESX.GetPlayerFromId(_source)
@@ -84,8 +76,9 @@ ESX.RegisterServerCallback('eden_garage:getOutVehicles',function(source, cb)
 		cb(vehicules)
 	end)
 end)
+-- End out list
 
---Foonction qui check l'argent
+-- Check player has funds
 ESX.RegisterServerCallback('eden_garage:checkMoney', function(source, cb)
 
 	local xPlayer = ESX.GetPlayerFromId(source)
@@ -96,24 +89,21 @@ ESX.RegisterServerCallback('eden_garage:checkMoney', function(source, cb)
 		cb(false)
 	end
 end)
---Fin Foonction qui check l'argent
+-- End funds check
 
---fonction qui retire argent
-
+-- Withdraw money
 AddEventHandler('eden_garage:pay', function()
 
 	local xPlayer = ESX.GetPlayerFromId(source)
 
-
 	xPlayer.removeMoney(Config.Price)
 
-	TriggerClientEvent('esx:showNotification', source, 'Hai pagato ' .. Config.Price)
+	TriggerClientEvent('esx:showNotification', source, 'You paid $' .. Config.Price)
 
 end)
---Fin fonction qui retire argent
+-- End money withdraw
 
-
---Recupere les vehicules
+-- Find player vehicles
 function getPlayerVehicles(identifier)
 	
 	local vehicles = {}
@@ -124,9 +114,9 @@ function getPlayerVehicles(identifier)
 	end
 	return vehicles
 end
---Fin Recupere les vehicules
+-- End fetch vehicles
 
---Debug
+-- Debug [not sure how to use this tbh]
 AddEventHandler('eden_garage:debug', function(var)
 	print(to_string(var))
 end)
@@ -168,33 +158,29 @@ function to_string( tbl )
         return tostring(tbl)
     end
 end
---Fin Debug
+-- End debug
 
-
--- Fonction qui change les etats sorti en rentré lors d'un restart
+-- Return all vehicles to garage (state update) on server restart
 AddEventHandler('onMySQLReady', function()
 
 	MySQL.Sync.execute("UPDATE owned_vehicles SET state=true WHERE state=false", {})
 
 end)
--- Fin Fonction qui change les etats sorti en rentré lors d'un restart
+-- End vehicle return
 
-
---debut de payement pour la santé vehicule
+-- Pay vehicle repair cost
 AddEventHandler('eden_garage:payhealth', function(price)
 	local xPlayer = ESX.GetPlayerFromId(source)
 
 	xPlayer.removeMoney(price)
 
-	TriggerClientEvent('esx:showNotification', source, 'Hai pagato ' .. price)
+	TriggerClientEvent('esx:showNotification', source, 'You paid $' .. price)
 
 end)
---fin de payement pour la santé vehicule
+-- End repair cost
 
-
---logger dans la console
+-- Log to the console
 AddEventHandler('eden_garage:logging', function(logging)
 	RconPrint(logging)
 end)
-
---fin de logger dans la console
+-- End console log
