@@ -1,31 +1,23 @@
 # esx_eden_garage
 ## ENGLISH
 
-This is the same exact script from somewhere else with Garages and Impounds.. i just update it to support latest db changes
-I tried to find the source of this script and i think it's property of snyx95.. but this version has Impounds too.
-IF YOU'RE THE ORIGINAL AUTHOR OF THIS SCRIPT LET ME KNOW YOU AND YOUR INTENTIONS WITH MY RELEASE
+Forked from manups4e's version, updated to match latest db structure, but also translated into English by me, an Englishman.
+
 ##
 
 
-Garage privé basé sur ESX
+Private garage based on ESX
 
-Requirement : 
-fxserver-esx_vehicleshop
+Single requirement:
+esx_vehicleshop
 
-Le garage prends en compte uniquement les véhicules achetés dans le concessionaire et aussi les véhicules qui sont dehors ou non.
-Lors d'un reboot tous les véhicules passe en rentré.
+The garage will only consider vehicles bought from the dealership (i.e. in the owned_vehicles table). During a reboot, all vehicle states are reset and returned to the garage.
 
-1) Il faut appliquer le SQL
-2) Mettre la resource dans votre server.cfg
-3) Modifier la config pour ajouter garage ou modifier
+1) You must import the .sql provided.
+2) Add 'start esx_eden_garage_updated' to your server.cfg
+3) The config file can be used to specify different things, including garage locations.
 
-BUG CONNU :
-
-- Certains véhicules sont impossible à rentrer
-- En cherchant bien il est possible de dupliquer les véhicules
-
-Nous travaillons dessus. 
-
-Fonctionnement :
-Entrez dans le cercle vert a pied pour sortir un vehicule, entre dans le cercle rouge avec votre vehicule pour le rentrer si le vehicule est endomagé un menu vous annonce le montant de la facture vous pouvez la payer pour rentrer le vehicule ou aller voir un mécano
-
+How to use (in-game):
+Drive your car into the red circle and press 'E' to store it.
+Walk into the green circle and press 'E' to see the list of your stored vehicles and recall one. 
+If your vehicle is impounded, you'll have to go to one of the three impound lots and pay a fee to get it back.
