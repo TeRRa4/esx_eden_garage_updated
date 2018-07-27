@@ -1,4 +1,4 @@
-# esx_eden_garage
+# esx_eden_garage_midg
 ## ENGLISH
 
 Forked from manups4e's version, updated to match latest db structure, but also translated into English by me, an Englishman.
